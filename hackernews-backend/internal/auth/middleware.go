@@ -41,7 +41,7 @@ func Middleware() func(http.Handler) http.Handler {
 				next.ServeHTTP(w, r)
 				return
 			}
-			user.ID = strconv.Itoa(id)
+			user.Id = strconv.Itoa(id)
 			// put it in context
 			ctx := context.WithValue(r.Context(), userCtxKey, &user)
 

@@ -2,25 +2,32 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Link {
+type Article {
   id: ID!
   title: String!
-  address: String!
+  url: String!
   user: User!
 }
 
 type User {
   id: ID!
   name: String!
+  email: String!
+}
+
+type ArticleVotes {
+  id: ID!
+  article_id: String!
+  user_id: String!
 }
 
 type Query {
-  links: [Link!]!
+  articles: [Article!]!
 }
 
-input NewLink {
+input NewArticle {
   title: String!
-  address: String!
+  url: String!
 }
 
 input RefreshTokenInput {
@@ -30,6 +37,7 @@ input RefreshTokenInput {
 input NewUser {
   username: String!
   password: String!
+  email: String!
 }
 
 input Login {
@@ -38,9 +46,8 @@ input Login {
 }
 
 type Mutation {
-  createLink(input: NewLink!): Link!
+  createArticle(input: NewArticle!): Article!
   createUser(input: NewUser!): String!
   login(input: Login!): String!
-  # we'll talk about this in authentication section
   refreshToken(input: RefreshTokenInput!): String!
 }

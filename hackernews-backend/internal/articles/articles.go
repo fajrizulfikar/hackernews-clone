@@ -1,4 +1,4 @@
-package links
+package articles
 
 import (
 	database "github.com/fajrizulfikar/hackernews-backend/internal/pkg/db/migrations/mysql"
@@ -7,27 +7,22 @@ import (
 	"log"
 )
 
-// #1
-type Link struct {
-	ID      string
-	Title   string
-	Address string
-	User    *users.User
+type Article struct {
+	Id    string
+	Title string
+	Url   string
+	User  *users.User
 }
 
-// #2
-func (link Link) Save() int64 {
-	//#3
-	stmt, err := database.DB.Prepare("INSERT INTO Links(Title,Address, UserID) VALUES(?,?,?)")
+func (article Article) Save() int64 {
+	stmt, err := database.DB.Prepare("INSERT INTO article(title,url, user_id) VALUES(?,?,?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	//#4
-	res, err := stmt.Exec(link.Title, link.Address, link.User.ID)
+	res, err := stmt.Exec(article.Title, article.Url, article.User.Id)
 	if err != nil {
 		log.Fatal(err)
 	}
-	//#5
 	id, err := res.LastInsertId()
 	if err != nil {
 		log.Fatal("Error:", err.Error())
@@ -36,7 +31,7 @@ func (link Link) Save() int64 {
 	return id
 }
 
-func GetAll() []Link {
+func GetAll() []Article {
 	stmt, err := database.DB.Prepare("select L.id, L.title, L.address, L.UserID, U.Username from Links L inner join Users U on L.UserID = U.ID")
 	if err != nil {
 		log.Fatal(err)
@@ -47,23 +42,23 @@ func GetAll() []Link {
 		log.Fatal(err)
 	}
 	defer rows.Close()
-	var links []Link
+	var articles []Article
 	var username string
 	var id string
 	for rows.Next() {
-		var link Link
-		err := rows.Scan(&link.ID, &link.Title, &link.Address, &id, &username)
+		var article Article
+		err := rows.Scan(&article.Id, &article.Title, &article.Url, &id, &username)
 		if err != nil {
 			log.Fatal(err)
 		}
-		link.User = &users.User{
-			ID:       id,
+		article.User = &users.User{
+			Id:       id,
 			Username: username,
 		}
-		links = append(links, link)
+		articles = append(articles, article)
 	}
 	if err = rows.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return links
+	return articles
 }

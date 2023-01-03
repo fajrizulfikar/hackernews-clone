@@ -10,26 +10,27 @@ import (
 )
 
 type User struct {
-	ID       string `json:"id"`
+	Id       string `json:"id"`
 	Username string `json:"name"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
 func (user *User) Create() {
-	stmt, err := database.DB.Prepare("INSERT INTO Users(Username,Password) VALUES(?,?)")
+	stmt, err := database.DB.Prepare("INSERT INTO user(username,email,password) VALUES(?,?,?)")
 	print(stmt)
 	if err != nil {
 		log.Fatal(err)
 	}
 	hashedPassword, err := HashPassword(user.Password)
-	_, err = stmt.Exec(user.Username, hashedPassword)
+	_, err = stmt.Exec(user.Username, user.Email, hashedPassword)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func (user *User) Authenticate() bool {
-	stmt, err := database.DB.Prepare("select Password from Users WHERE Username = ?")
+	stmt, err := database.DB.Prepare("SELECT password from user WHERE username = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,7 +51,7 @@ func (user *User) Authenticate() bool {
 
 // GetUserIdByUsername check if a user exists in database by given username
 func GetUserIdByUsername(username string) (int, error) {
-	stmt, err := database.DB.Prepare("select ID from Users WHERE Username = ?")
+	stmt, err := database.DB.Prepare("SELECT id from user WHERE username = ?")
 	if err != nil {
 		log.Fatal(err)
 	}

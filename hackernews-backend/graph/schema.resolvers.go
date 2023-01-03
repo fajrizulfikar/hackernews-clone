@@ -7,39 +7,22 @@ package graph
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/fajrizulfikar/hackernews-backend/graph/model"
-	"github.com/fajrizulfikar/hackernews-backend/internal/auth"
-	"github.com/fajrizulfikar/hackernews-backend/internal/links"
 	"github.com/fajrizulfikar/hackernews-backend/internal/users"
 	"github.com/fajrizulfikar/hackernews-backend/pkg/jwt"
 )
 
-// CreateLink is the resolver for the createLink field.
-func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) (*model.Link, error) {
-	user := auth.ForContext(ctx)
-	if user == nil {
-		return &model.Link{}, fmt.Errorf("access denied")
-	}
-
-	var link links.Link
-
-	link.Address = input.Address
-	link.Title = input.Title
-	link.User = user
-	linkID := link.Save()
-	graphqlUser := &model.User{
-		ID:   user.ID,
-		Name: user.Username,
-	}
-	return &model.Link{ID: strconv.FormatInt(linkID, 10), Title: link.Title, Address: link.Address, User: graphqlUser}, nil
+// CreateArticle is the resolver for the createArticle field.
+func (r *mutationResolver) CreateArticle(ctx context.Context, input model.NewArticle) (*model.Article, error) {
+	panic(fmt.Errorf("not implemented: CreateArticle - createArticle"))
 }
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (string, error) {
 	var user users.User
 	user.Username = input.Username
+	user.Email = input.Email
 	user.Password = input.Password
 	user.Create()
 	token, err := jwt.GenerateToken(user.Username)
@@ -56,7 +39,6 @@ func (r *mutationResolver) Login(ctx context.Context, input model.Login) (string
 	user.Password = input.Password
 	correct := user.Authenticate()
 	if !correct {
-		// 1
 		return "", &users.WrongUsernameOrPasswordError{}
 	}
 	token, err := jwt.GenerateToken(user.Username)
@@ -79,18 +61,9 @@ func (r *mutationResolver) RefreshToken(ctx context.Context, input model.Refresh
 	return token, nil
 }
 
-// Links is the resolver for the links field.
-func (r *queryResolver) Links(ctx context.Context) ([]*model.Link, error) {
-	var resultlinks []*model.Link
-	var dbLinks []links.Link = links.GetAll()
-	for _, link := range dbLinks {
-		graphqlUser := &model.User{
-			ID:   link.User.ID,
-			Name: link.User.Username,
-		}
-		resultlinks = append(resultlinks, &model.Link{ID: link.ID, Title: link.Title, Address: link.Address, User: graphqlUser})
-	}
-	return resultlinks, nil
+// Articles is the resolver for the articles field.
+func (r *queryResolver) Articles(ctx context.Context) ([]*model.Article, error) {
+	panic(fmt.Errorf("not implemented: Articles - articles"))
 }
 
 // Mutation returns MutationResolver implementation.
