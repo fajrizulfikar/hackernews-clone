@@ -7,15 +7,32 @@ package graph
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/fajrizulfikar/hackernews-backend/graph/model"
+	"github.com/fajrizulfikar/hackernews-backend/internal/articles"
+	"github.com/fajrizulfikar/hackernews-backend/internal/auth"
 	"github.com/fajrizulfikar/hackernews-backend/internal/users"
 	"github.com/fajrizulfikar/hackernews-backend/pkg/jwt"
 )
 
 // CreateArticle is the resolver for the createArticle field.
 func (r *mutationResolver) CreateArticle(ctx context.Context, input model.NewArticle) (*model.Article, error) {
-	panic(fmt.Errorf("not implemented: CreateArticle - createArticle"))
+	user := auth.ForContext(ctx)
+	if user == nil {
+		return &model.Article{}, fmt.Errorf("access denied")
+	}
+	var article articles.Article
+	article.Title = input.Title
+	article.Url = input.URL
+	article.User = user
+	articleId := article.Save()
+	graphqlUser := &model.User{
+		ID:    user.Id,
+		Name:  user.Username,
+		Email: user.Email,
+	}
+	return &model.Article{ID: strconv.FormatInt(articleId, 10), Title: article.Title, URL: article.Url, User: graphqlUser}, nil
 }
 
 // CreateUser is the resolver for the createUser field.

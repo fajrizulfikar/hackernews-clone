@@ -15,7 +15,7 @@ type Article struct {
 }
 
 func (article Article) Save() int64 {
-	stmt, err := database.DB.Prepare("INSERT INTO article(title,url, user_id) VALUES(?,?,?)")
+	stmt, err := database.DB.Prepare("INSERT INTO article(title,url,user_id) VALUES(?,?,?)")
 	if err != nil {
 		log.Fatal(err)
 	}
