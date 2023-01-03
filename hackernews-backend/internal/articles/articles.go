@@ -32,7 +32,7 @@ func (article Article) Save() int64 {
 }
 
 func GetAll() []Article {
-	stmt, err := database.DB.Prepare("select L.id, L.title, L.address, L.UserID, U.Username from Links L inner join Users U on L.UserID = U.ID")
+	stmt, err := database.DB.Prepare("SELECT A.id, A.title, A.url, A.user_id, U.username from article A INNER JOIN user U on A.user_id = U.id")
 	if err != nil {
 		log.Fatal(err)
 	}

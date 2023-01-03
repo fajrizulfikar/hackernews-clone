@@ -80,7 +80,15 @@ func (r *mutationResolver) RefreshToken(ctx context.Context, input model.Refresh
 
 // Articles is the resolver for the articles field.
 func (r *queryResolver) Articles(ctx context.Context) ([]*model.Article, error) {
-	panic(fmt.Errorf("not implemented: Articles - articles"))
+	var resultArticles []*model.Article
+	dbArticles := articles.GetAll()
+	for _, article := range dbArticles {
+		graphqlUser := &model.User{
+			Name: article.User.Username,
+		}
+		resultArticles = append(resultArticles, &model.Article{ID: article.Id, Title: article.Title, URL: article.Url, User: graphqlUser})
+	}
+	return resultArticles, nil
 }
 
 // Mutation returns MutationResolver implementation.
