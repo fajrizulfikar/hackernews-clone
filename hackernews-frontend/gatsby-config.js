@@ -7,15 +7,16 @@ module.exports = {
     siteUrl: `https://www.yourdomain.tld`,
   },
   plugins: [
-    "gatsby-plugin-offline",
     "gatsby-plugin-postcss",
     "gatsby-plugin-image",
     {
       resolve: "gatsby-plugin-manifest",
       options: {
+        display: "standalone",
         icon: "src/images/icon.png",
       },
     },
+    "gatsby-plugin-offline",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
     {
