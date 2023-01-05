@@ -33,12 +33,9 @@ const IndexPage = () => {
               tabIndex={0}
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
-                <a>Item 1</a>
-              </li>
-              <li>
-                <a>Item 2</a>
-              </li>
+              {menus.map((menu) => (
+                <li>{menu}</li>
+              ))}
             </ul>
           </div>
         </div>
