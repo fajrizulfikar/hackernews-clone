@@ -15,6 +15,7 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "axios": "^1.2.2",
     "daisyui": "^2.46.1",
     "gatsby": "^5.3.3",
     "gatsby-plugin-image": "^3.3.2",
@@ -24,7 +25,8 @@
     "gatsby-source-filesystem": "^5.3.1",
     "gatsby-transformer-sharp": "^5.3.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-query": "^3.39.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

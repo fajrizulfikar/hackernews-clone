@@ -1,10 +1,26 @@
 import * as React from "react";
 
+import axios from "axios";
+import { useQuery } from "react-query";
+
 import Hackernews from "../gifs/hackernews.gif";
 
 const menus = ["new", "past", "comments", "ask", "show", "jobs", "submit"];
 
+const endpoint = "http://localhost:8080/query";
+const ARTICLES_QUERY = "{ articles { title, url, id } }";
+
 const IndexPage = () => {
+  const { data, isLoading, error } = useQuery("articles", async () => {
+    const response = await axios.post(endpoint, { query: ARTICLES_QUERY });
+    return response.data.data;
+  });
+
+  if (isLoading) return "Loading...";
+  if (error) return <pre>{error.message}</pre>;
+
+  console.log("data", data);
+
   return (
     <div>
       <div

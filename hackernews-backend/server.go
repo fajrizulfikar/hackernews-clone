@@ -8,6 +8,7 @@ import (
 	"github.com/fajrizulfikar/hackernews-backend/internal/auth"
 	database "github.com/fajrizulfikar/hackernews-backend/internal/pkg/db/migrations/mysql"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -23,6 +24,15 @@ func main() {
 	}
 
 	router := chi.NewRouter()
+
+	router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 
 	router.Use(auth.Middleware())
 
